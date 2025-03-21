@@ -15,6 +15,9 @@ import appStyles from '~/styles/app.css?url';
 import tailwindCss from './styles/tailwind.css?url';
 import {PageLayout} from '~/components/PageLayout';
 import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
+import { getLocaleFromRequest } from './lib/i18n';
+import Hello from './components/Hello';
+// import getLocaleFromRequest from './lib/utils';
 
 /**
  * This is important to avoid re-fetching root queries on sub-navigations
@@ -168,7 +171,7 @@ export function Layout({children}) {
             consent={data.consent}
           >
             <PageLayout {...data} key={`${locale.language}-${locale.country}`}>{children}
-
+             <Hello/>
               {/* <CountrySelector/> */}
             </PageLayout>
           </Analytics.Provider>
