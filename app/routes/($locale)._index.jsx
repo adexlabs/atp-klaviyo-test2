@@ -13,6 +13,19 @@ export const meta = () => {
  * @param {LoaderFunctionArgs} args
  */
 export async function loader(args) {
+  
+const {language, country} = context.storefront.i18n;
+
+if (
+  params.locale &&
+  params.locale.toLowerCase() !== `${language}-${country}`.toLowerCase()
+) {
+  // If the locale URL param is defined, yet we still are on `EN-US`
+  // the the locale param must be invalid, send to the 404 page
+  throw new Response(null, {status: 404});
+}
+
+
   // Start fetching non-critical data without blocking time to first byte
   const deferredData = loadDeferredData(args);
 
@@ -20,7 +33,10 @@ export async function loader(args) {
   const criticalData = await loadCriticalData(args);
 
   return {...deferredData, ...criticalData};
+
+  
 }
+
 
 /**
  * Load data necessary for rendering content above the fold. This is the critical data

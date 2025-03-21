@@ -3,13 +3,27 @@
 // @ts-ignore
 // eslint-disable-next-line import/no-unresolved
 import * as remixBuild from 'virtual:remix/server-build';
-import {storefrontRedirect} from '@shopify/hydrogen';
+import {createStorefrontClient, storefrontRedirect} from '@shopify/hydrogen';
 import {createRequestHandler} from '@shopify/remix-oxygen';
 import {createAppLoadContext} from '~/lib/context';
+import { getLocaleFromRequest } from '~/lib/utils';
+
+
 
 /**
  * Export a fetch handler in module format.
  */
+
+export function usePrefixPathWithLocale(path) {
+  const [root] = useMatches();
+  const selectedLocale = root.data.selectedLocale;
+
+  return selectedLocale
+    ? `${selectedLocale.pathPrefix}${
+        path.startsWith('/') ? path : '/' + path
+      }`
+    : path;
+}
 export default {
   /**
    * @param {Request} request
@@ -24,6 +38,13 @@ export default {
         env,
         executionContext,
       );
+
+
+      const {storefront} = createStorefrontClient({
+       
+        i18n: getLocaleFromRequest(request),
+      
+      });
 
       /**
        * Create a Remix request handler and pass

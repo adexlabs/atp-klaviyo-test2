@@ -72,6 +72,7 @@ export async function loader(args) {
   const {storefront, env} = args.context;
 
   return {
+    selectedLocale: await getLocaleFromRequest(request),
     ...deferredData,
     ...criticalData,
     publicStoreDomain: env.PUBLIC_STORE_DOMAIN,
@@ -166,7 +167,10 @@ export function Layout({children}) {
             shop={data.shop}
             consent={data.consent}
           >
-            <PageLayout {...data}>{children}</PageLayout>
+            <PageLayout {...data} key={`${locale.language}-${locale.country}`}>{children}
+
+              {/* <CountrySelector/> */}
+            </PageLayout>
           </Analytics.Provider>
         ) : (
           children
